@@ -130,11 +130,29 @@ def run_training(training: Training) -> None:
     print(info.get_message())
 
 
-if __name__ == '__main__':
-    running = Running(10000, 1.5, 70)
-    sports_walking = SportsWalking(12000, 2, 65, 170)
-    swimming = Swimming(2000, 0.5, 75)
+def read_package(package):
+    package_type, package_data = package
+    if package_type == 'SWM':
+        return Swimming(*package_data)
+    elif package_type == 'WLK':
+        return SportsWalking(*package_data)
+    elif package_type == 'RUN':
+        return Running(*package_data)
+    else:
+        raise ValueError("Invalid package type")
 
-    run_training(running)
-    run_training(sports_walking)
-    run_training(swimming)
+
+def main():
+    packages = [
+        ('SWM', [720, 1, 80, 25, 40]),
+        ('RUN', [1206, 12, 6]),
+        ('WLK', [9000, 1, 75, 180])
+    ]
+
+    for package in packages:
+        training = read_package(package)
+        run_training(training)
+
+
+if __name__ == '__main__':
+    main()
