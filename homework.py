@@ -85,8 +85,6 @@ class SportsWalking(Training):
     CALORIES_WEIGHT_MULTIPLIER: ClassVar[float] = 0.035
     CALORIES_DURATION_MULTIPLIER: ClassVar[float] = 0.029
     CALORIES_MEAN_SPEED_SQUARING: ClassVar[float] = 2
-    KM_PER_HOUR_TO_M_PER_SEC: ClassVar[float] = 0.278
-    CM_TO_M: ClassVar[float] = 100
 
     def __init__(
         self,
@@ -96,16 +94,17 @@ class SportsWalking(Training):
         height: float
     ) -> None:
         super().__init__(action, duration, weight)
-        self.height_sm = height
+        self.height_m = height / 100
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
+        mean_speed = self.get_mean_speed()
         return (
             (
                 self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg
-                + (self.get_mean_speed() ** self.CALORIES_MEAN_SPEED_SQUARING)
-                / self.height_sm * self.CALORIES_DURATION_MULTIPLIER
+                + (mean_speed ** self.CALORIES_MEAN_SPEED_SQUARING)
+                / self.height_m * self.CALORIES_DURATION_MULTIPLIER
             )
             * duration_in_minutes
         )
@@ -141,14 +140,12 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
+        mean_speed = self.get_mean_speed()
         return (
-            (
-                self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SUBTRAHEND
-            )
+            (mean_speed + self.CALORIES_MEAN_SPEED_SUBTRAHEND)
             * self.CALORIES_WEIGHT_MULTIPLIER
             * self.weight_kg
-            * duration_in_minutes
+            * self.duration_h
         )
 
 
