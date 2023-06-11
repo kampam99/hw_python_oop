@@ -169,6 +169,12 @@ def read_package(workout_type: str, data: list) -> Training:
     if workout_type not in training_data:
         raise KeyError(f'Тренировки {workout_type} нет в списке известных.')
 
+    if workout_type == 'WLK':
+        if len(data) != 5:
+            raise ValueError(f'''Некорректное количество
+                              данных для тренировки "WLK". '
+                             Ожидается 5 аргументов, получено {len(data)}.''')
+
     return training_data[workout_type](*data)
 
 
@@ -186,5 +192,8 @@ if __name__ == '__main__':
     ]
 
     for workout_type, data in packages:
-        training = read_package(workout_type, data)
-        main(training)
+        try:
+            training = read_package(workout_type, data)
+            main(training)
+        except (KeyError, ValueError) as e:
+            print(f'Ошибка: {e}')
