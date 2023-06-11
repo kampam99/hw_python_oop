@@ -149,7 +149,7 @@ class Swimming(Training):
                 self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg
                 + (
                     self.get_mean_speed() ** self.CALORIES_SPEED_SQUARING
-                    / (self.height_cm / self.CALORIES_HEIGHT_DIVIDER)
+                    / (self.height_sm / self.CALORIES_HEIGHT_DIVIDER)
                 )
                 * self.CALORIES_DURATION_MULTIPLIER
                 * self.weight_kg
