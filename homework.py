@@ -82,6 +82,7 @@ class SportsWalking(Training):
     CALORIES_WEIGHT_MULTIPLIER: float = 0.035
     CALORIES_DURATION_MULTIPLIER: float = 0.029
     CALORIES_MEAN_SPEED_SQUARING: float = 2
+    KM_PER_HOUR_TO_M_PER_SEC: ClassVar[float] = 0.278
 
     def __init__(self,
                  action: int,
@@ -107,6 +108,8 @@ class Swimming(Training):
     LEN_STEP: float = 1.38
     CALORIES_MEAN_SPEED_SUBTRAHEND: float = 1.1
     CALORIES_WEIGHT_MULTIPLIER: float = 2
+    KM_PER_HOUR_TO_M_PER_SEC: ClassVar[float] = 0.278
+    SHIFT_MEAN_SPEED: ClassVar[float] = 1.79
 
     def __init__(self,
                  action: int,
@@ -120,14 +123,16 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
+        a = self.KM_PER_HOUR_TO_M_PER_SEC
         """Получить среднюю скорость движения."""
         return (self.length_pool_m * self.count_pool / self.M_IN_KM
-                / self.duration_h)
+                / (self.duration_h * self.MINUTES_IN_HOUR * a))
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         return ((self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SUBTRAHEND)
-                * self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
+                * self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg
+                * (self.duration_h * self.MINUTES_IN_HOUR))
 
 
 def read_package(workout_type: str, data: list) -> Training:
