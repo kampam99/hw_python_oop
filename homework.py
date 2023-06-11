@@ -93,30 +93,18 @@ class SportsWalking(Training):
         action: int,
         duration: float,
         weight: float,
-        height: float,
-        distance: float,
+        height: float
     ) -> None:
         super().__init__(action, duration, weight)
         self.height_cm = height
-        self.distance_km = distance
-
-    def get_mean_speed(self) -> float:
-        """Получить среднюю скорость движения."""
-        duration_in_hours = self.duration_h
-        b = self.KM_PER_HOUR_TO_M_PER_SEC
-        return self.distance_km / (duration_in_hours * b)
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
-        height_m = self.height_cm / self.CM_TO_M
-        a = self.CALORIES_MEAN_SPEED_SQUARING
-        calories_mean_speed = self.get_mean_speed() ** a
-        calories_duration_multiplier = self.CALORIES_DURATION_MULTIPLIER
-        return (
-            (self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
-            + (calories_mean_speed / height_m) * calories_duration_multiplier
-        ) * duration_in_minutes
+        return (((self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
+                + ((self.get_mean_speed() * self.KM_PER_HOUR_TO_M_PER_SEC) ** 2
+                / (self.height_cm / self.CM_TO_M))
+                * (self.CALORIES_DURATION_MULTIPLIER * self.weight_kg))
+                * (self.duration_h * self.MINUTES_IN_HOUR))
 
 
 class Swimming(Training):
@@ -168,7 +156,6 @@ def read_package(workout_type: str, data: list) -> Training:
 
     if workout_type not in training_data:
         raise KeyError(f'Тренировки {workout_type} нет в списке известных.')
-
     return training_data[workout_type](*data)
 
 
