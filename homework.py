@@ -85,6 +85,7 @@ class SportsWalking(Training):
     CALORIES_WEIGHT_MULTIPLIER: ClassVar[float] = 0.035
     CALORIES_DURATION_MULTIPLIER: ClassVar[float] = 0.029
     CALORIES_MEAN_SPEED_SQUARING: ClassVar[float] = 2
+    KM_PER_HOUR_TO_M_PER_SEC: ClassVar[float] = 0.278
 
     def __init__(
         self,
