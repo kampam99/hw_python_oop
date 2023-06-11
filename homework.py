@@ -93,10 +93,12 @@ class SportsWalking(Training):
         action: int,
         duration: float,
         weight: float,
-        height: float
+        height: float,
+        distance: float,
     ) -> None:
         super().__init__(action, duration, weight)
         self.height_cm = height
+        self.distance_km = distance
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
