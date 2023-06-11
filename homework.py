@@ -67,12 +67,12 @@ class Running(Training):
     """Тренировка: бег."""
 
     CALORIES_MEAN_SPEED_MULTIPLIER: float = 18
-    CALORIES_ENERGY_SUBTRAHEND: float = 20
+    CALORIES_ENERGY_SUBTRAHEND: float = 1.79
 
     def get_spent_calories(self) -> float:
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
-                - self.CALORIES_ENERGY_SUBTRAHEND) * self.weight_kg
+                 + self.CALORIES_ENERGY_SUBTRAHEND) * self.weight_kg
                 / self.M_IN_KM * duration_in_minutes)
 
 
@@ -96,8 +96,8 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий."""
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
         return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg
-                 + (self.get_mean_speed() ** self.CALORIES_MEAN_SPEED_SQUARING
-                    // self.height_sm) * self.CALORIES_DURATION_MULTIPLIER)
+                 + (self.get_mean_speed() ** self.CALORIES_MEAN_SPEED_SQUARING)
+                 / self.height_sm * self.CALORIES_DURATION_MULTIPLIER)
                 * duration_in_minutes)
 
 
