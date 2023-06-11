@@ -98,6 +98,12 @@ class SportsWalking(Training):
         super().__init__(action, duration, weight)
         self.height_cm = height
 
+    def get_mean_speed(self) -> float:
+        """Получить среднюю скорость движения."""
+        duration_in_hours = self.duration_h
+        b = self.KM_PER_HOUR_TO_M_PER_SEC
+        return self.distance_km / (duration_in_hours * b)
+
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
