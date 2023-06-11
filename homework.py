@@ -171,8 +171,8 @@ def read_package(workout_type: str, data: list) -> Training:
 
     if workout_type == 'WLK':
         if len(data) != 5:
-            raise ValueError(f'''Некорректное количество
-                              данных для тренировки "WLK". '
+            raise ValueError(f'''Некорректное количество данных
+                              для тренировки "WLK". '
                              Ожидается 5 аргументов, получено {len(data)}.''')
 
     return training_data[workout_type](*data)
