@@ -19,9 +19,22 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
+    available_workouts: ClassVar[Dict[str, str]] = {
+        'SWM': 'Плавание',
+        'RUN': 'Бег',
+        'WLK': 'Спортивная ходьба',
+    }
 
     def get_message(self) -> str:
-        return self.TEXT_MESSAGE.format_map(asdict(self))
+        workout_list = '\n'.join(
+            f"{key}: {value}" for key, value in self.available_workouts.items()
+        )
+        message = self.TEXT_MESSAGE.format_map(asdict(self))
+        return f"{message}\n\nДоступные тренировки:\n{workout_list}"
+
+
+# Остальной код без изменений
+...
 
 
 class Training:
