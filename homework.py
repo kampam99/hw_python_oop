@@ -33,10 +33,6 @@ class InfoMessage:
         return f"{message}\n\nДоступные тренировки:\n{workout_list}"
 
 
-# Остальной код без изменений
-...
-
-
 class Training:
     """Базовый класс тренировки."""
 
