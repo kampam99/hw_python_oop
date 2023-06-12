@@ -19,18 +19,9 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    available_workouts: ClassVar[Dict[str, str]] = {
-        'SWM': 'Плавание',
-        'RUN': 'Бег',
-        'WLK': 'Спортивная ходьба',
-    }
 
     def get_message(self) -> str:
-        workout_list = '\n'.join(
-            f"{key}: {value}" for key, value in self.available_workouts.items()
-        )
-        message = self.TEXT_MESSAGE.format_map(asdict(self))
-        return f"{message}\n\nДоступные тренировки:\n{workout_list}"
+        return self.TEXT_MESSAGE.format_map(asdict(self))
 
 
 class Training:
@@ -77,9 +68,10 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
+        mean_speed = self.get_mean_speed()
         return (
             (
-                self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
+                self.CALORIES_MEAN_SPEED_MULTIPLIER * mean_speed
                 + self.CALORIES_ENERGY_SUBTRAHEND
             )
             * self.weight_kg
@@ -108,9 +100,9 @@ class SportsWalking(Training):
         self.height_cm = height
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий."""
+        mean_speed = self.get_mean_speed()
         return (((self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
-                + ((self.get_mean_speed() * self.KM_PER_HOUR_TO_M_PER_SEC) ** 2
+                + ((mean_speed * self.KM_PER_HOUR_TO_M_PER_SEC) ** 2
                 / (self.height_cm / self.CM_TO_M))
                 * (self.CALORIES_DURATION_MULTIPLIER * self.weight_kg))
                 * (self.duration_h * self.MINUTES_IN_HOUR))
@@ -145,7 +137,6 @@ class Swimming(Training):
         )
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий."""
         mean_speed = self.get_mean_speed()
         return (
             (mean_speed + self.CALORIES_MEAN_SPEED_SUBTRAHEND)
