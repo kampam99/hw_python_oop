@@ -40,10 +40,6 @@ class Training:
         """Получить дистанцию в км."""
         return self.actions_count * self.LEN_STEP / self.M_IN_KM
 
-    def get_mean_speed(self) -> float:
-        """Получить среднюю скорость движения."""
-        return self.get_distance() / self.duration_h
-
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         raise NotImplementedError(f'{type(self).__name__} error. Subclasses '
@@ -68,10 +64,9 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
-        mean_speed = self.get_mean_speed()
         return (
             (
-                self.CALORIES_MEAN_SPEED_MULTIPLIER * mean_speed
+                self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
                 + self.CALORIES_ENERGY_SUBTRAHEND
             )
             * self.weight_kg
@@ -100,12 +95,13 @@ class SportsWalking(Training):
         self.height_cm = height
 
     def get_spent_calories(self) -> float:
-        mean_speed = self.get_mean_speed()
-        return (((self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
-                + ((mean_speed * self.KM_PER_HOUR_TO_M_PER_SEC) ** 2
+        return (
+            ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight_kg)
+             + ((self.get_mean_speed() * self.KM_PER_HOUR_TO_M_PER_SEC) ** 2
                 / (self.height_cm / self.CM_TO_M))
-                * (self.CALORIES_DURATION_MULTIPLIER * self.weight_kg))
-                * (self.duration_h * self.MINUTES_IN_HOUR))
+             * (self.CALORIES_DURATION_MULTIPLIER * self.weight_kg))
+            * (self.duration_h * self.MINUTES_IN_HOUR)
+        )
 
 
 class Swimming(Training):
@@ -137,9 +133,8 @@ class Swimming(Training):
         )
 
     def get_spent_calories(self) -> float:
-        mean_speed = self.get_mean_speed()
         return (
-            (mean_speed + self.CALORIES_MEAN_SPEED_SUBTRAHEND)
+            (self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SUBTRAHEND)
             * self.CALORIES_WEIGHT_MULTIPLIER
             * self.weight_kg
             * self.duration_h
