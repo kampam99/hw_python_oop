@@ -40,6 +40,10 @@ class Training:
         """Получить дистанцию в км."""
         return self.actions_count * self.LEN_STEP / self.M_IN_KM
 
+    def get_mean_speed(self) -> float:
+        """Получить среднюю скорость движения."""
+        return self.get_distance() / self.duration_h
+
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         raise NotImplementedError(f'{type(self).__name__} error. Subclasses '
